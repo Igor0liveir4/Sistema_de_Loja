@@ -53,3 +53,24 @@ def criar_produto(
     
     # Redireciona de volta para a home após salvar
     return RedirectResponse(url="/", status_code=303)
+
+@app.get("/categorias/cadastro")
+def exibir_cadastro_categoria(request: Request):
+    return templates.TemplateResponse(
+        request,
+        "nova_categoria.html",
+        {"request": request}
+    )
+
+@app.post("/categorias")
+def criar_categoria(
+    nome: str = Form(...),
+    descricao: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    nova_categoria = Categoria(nome=nome, descricao=descricao)
+
+    db.add(nova_categoria)
+    db.commit()
+
+    return RedirectResponse(url="/", status_code=303)
